@@ -1,0 +1,37 @@
+# Create a virtual environment and activate it
+pip install virtualenv
+.\venv\Scripts\Activate.ps1
+
+# Install dependencies
+pip install -r requirements.txt
+
+python Terminal
+# Import the database instance from the server module
+from app import db
+
+# Create all tables in the database
+db.create_all()
+
+
+# app.py
+'''If you want to create the database tables manually before running the Flask app,
+ you can create a separate Python script to run db.create_all() within the application context.'''
+ 
+ Create a create_db.py script:
+ '''Run the Script'''
+ python create_db.py
+
+ '''Option 2: Run db.create_all() within the app itself
+
+'''You can also ensure that the database tables are created automatically when the Flask app starts, 
+by using the before_first_request decorator, which ensures the database setup is done before handling the first request.'''
+
+ Initialize the database and load data (if necessary)
+@app.before_first_request
+def initialize():
+    db.create_all()  # Create database tables if they don't exist
+    try:
+        load_data()  # Load data once from JSON file
+    except Exception as e:
+        print(f"Error loading data: {e}")
+
